@@ -9,7 +9,7 @@ class Content extends React.Component {
         if (this.props.selected == "accountSettingButton") {
             return <AccountSettings/>
         }else {
-            return <div>Anagha</div>
+            return <div>Test</div>
         }
     }
 }

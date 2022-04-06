@@ -26,6 +26,3 @@ class AccountCreate extends React.Component {
 }
 
 export default AccountCreate;
-
-
-https://auth-personalfinancedashboard.auth.ap-south-1.amazoncognito.com/login??response_type=code&client_id=1pjkp2ev4en9509f6nt7qescl&redirect_url=https%3A%2F%2Fwww.personalfinancedashboard.xyz
