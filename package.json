@@ -13,7 +13,7 @@
   "scripts": {
     "start": "node src/app.local.js",
     "local": "node scripts/local",
-    "build-ui" : "cd react-ui-lambda && npm run build && cd ../",
+    "build-ui": "cd react-ui-lambda && npm run build && cd ../",
     "invoke-lambda": "cross-var aws lambda invoke --function-name $npm_package_config_functionName --region $npm_package_config_region --payload file://api-gateway-event.json lambda-invoke-response.json && cat lambda-invoke-response.json",
     "create-bucket": "cross-var aws s3 mb s3://$npm_package_config_s3BucketName --region $npm_package_config_region",
     "delete-bucket": "cross-var aws s3 rb s3://$npm_package_config_s3BucketName --region $npm_package_config_region",
@@ -27,11 +27,15 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@vendia/serverless-express": "^4.5.4",
+    "aws-sdk": "^2.1109.0",
     "body-parser": "^1.17.1",
     "compression": "^1.6.2",
+    "cookie-parser": "^1.4.6",
     "cors": "^2.8.3",
     "ejs": "^3.1.6",
-    "express": "^4.15.2"
+    "express": "^4.15.2",
+    "md5": "^2.3.0",
+    "request": "^2.88.2"
   },
   "devDependencies": {
     "copy-webpack-plugin": "^7.0.0",

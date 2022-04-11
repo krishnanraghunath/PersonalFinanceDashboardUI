@@ -1,0 +1,40 @@
+{
+    
+    "API_CONFIG" : {
+        "API_END_POINT" : "https://aham.personalfinancedashboard.xyz",
+        "DEFAULT_CACHE_TIME" : 3600,
+        "APIS" : {
+            "get_available_account_types" : {
+                "url" : "/jsapi/get_available_account_types",
+                "method": "GET",
+                "cache" : true,
+                "cache_ttl": 3600
+            },
+            "get_available_institutions" : {
+                "url" : "/jsapi/get_available_institutions",
+                "method": "GET",
+                "cache" : true,
+                "cache_ttl": 3600
+            },
+            "create_account" : {
+                "url" : "/jsapi/create_account",
+                "method": "POST",
+                "cache" : false,
+                "cache_ttl": 3600
+            }
+        }
+    },
+
+    "ACCOUNT_MANAGEMENT" : {
+        "ALERTS": {
+            "ALERT_INFO_ACCOUNT_SELECT" : "Please enter your Account Details",
+            "ALERT_INFO_ACCOUNTNUMBER_SELECT" : "Please enter and confirm your Account Number",
+            "ALERT_INFO_ACCOUNTNAME_SELECT" : "Please enter and confirm your Account Name",
+            "ALERT_ERROR_ACCOUNT_SELECT" : "Account Details are not provided correctly(select both account type and institution)",
+            "ALERT_ERROR_ACCOUNTNUMBER_SELECT" : "Account Number(s) missing",
+            "ALERT_ERROR_ACCOUNTNUMBER_MISMATCH" : "Account Number are not matching",
+            "ALERT_ERROR_ACCOUNTNAME_SELECT" : "Account Name Missing"
+        }
+    }
+    
+}

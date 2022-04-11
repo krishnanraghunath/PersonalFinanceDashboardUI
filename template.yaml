@@ -3,6 +3,15 @@ AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: Serverless Express Application/API powered by API Gateway and Lambda
 
+
+Parameters:
+  HOMEENDPOINT: {Type: String,Default: 'EMPTY_STRING'}
+  APPCLIENTID : {Type: String,Default: 'EMPTY_STRING'}
+  AUTHENDPOINT: {Type: String,Default: 'EMPTY_STRING'}
+  B64CLIENTSECRET: {Type: String,Default: 'EMPTY_STRING'}
+  BACKENDLAMBDAURL: {Type: String, Default: 'EMPTY_STRING'}
+  
+
 Resources:
   PerFinDashAPI:
     Type: AWS::Serverless::Api
@@ -15,9 +24,20 @@ Resources:
     Properties:
       CodeUri: ./dist
       Handler: main.handler
-      MemorySize: 1024
+      MemorySize: 256
       Runtime: nodejs12.x
-      Timeout: 30
+      Timeout: 60
+      Role:
+        Fn::GetAtt:
+          - PerFinDashUIWebsiteHandlerRole
+          - Arn
+      Environment:
+        Variables:
+          HOME_ENDPOINT: !Ref HOMEENDPOINT
+          APP_CLIENT_ID: !Ref APPCLIENTID
+          AUTH_ENDPOINT: !Ref AUTHENDPOINT
+          B64CLIENTSECRET: !Ref B64CLIENTSECRET
+          BACKEND_API_URL: !Ref BACKENDLAMBDAURL
       Events:
         ProxyApiRoot:
           Type: Api
@@ -25,6 +45,7 @@ Resources:
             RestApiId: !Ref PerFinDashAPI
             Path: /
             Method: ANY
+
         ProxyApiGreedy:
           Type: Api
           Properties:
@@ -32,3 +53,19 @@ Resources:
             Path: /{proxy+}
             Method: ANY
 
+  PerFinDashUIWebsiteHandlerRole:
+    Type: AWS::IAM::Role
+    Properties:
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess
+        - arn:aws:iam::aws:policy/AmazonS3FullAccess
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Action:
+              - sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
