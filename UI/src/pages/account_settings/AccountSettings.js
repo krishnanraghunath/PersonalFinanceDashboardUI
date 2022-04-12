@@ -4,6 +4,7 @@ import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider'
 import AccountCreate from "./AccountCreate"
+import AccountModify from "./AccountModify"
 
 class AccountSettings extends React.Component {
     constructor(props) {
@@ -26,11 +27,11 @@ class AccountSettings extends React.Component {
           <Tab label="Modify Account" value="modify" id="modify"/>
         </Tabs>
       </Box>
-      <Box  sx={{border: 1,margin: 4,backgroundColor:'green'}}>
+      <Box  sx={{border: 1,margin: 4,backgroundColor:'green',minWidth:390}}>
       <Box  sx={{border: 1,margin: 0.3,backgroundColor:'white'}}>
        <Divider/>
         {this.state.selectedTab == "create" && <AccountCreate/> }
-        {this.state.selectedTab == "modify" && <div>TBD</div> }
+        {this.state.selectedTab == "modify" && <AccountModify/> }
         </Box>
         </Box>
       </div>

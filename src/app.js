@@ -81,7 +81,6 @@ router.get('/jsapi/get_available_institutions',(req,res) => {
   })
 })
 
-
 router.post('/jsapi/create_account',(req,res) => {
   authenticationHelper.authenticate(req,function(err,dat) {
     if(err) {res.send({'error':"Not Authenticated"});return} 
@@ -94,6 +93,38 @@ router.post('/jsapi/create_account',(req,res) => {
     })
   })
 })
+
+router.post('/jsapi/delete_account',(req,res) => {
+  authenticationHelper.authenticate(req,function(err,dat) {
+    if(err) {res.send({'error':"Not Authenticated"});return} 
+    let accountId = JSON.parse(req.body).accountId
+    if(accountId == null){res.send({'error':'Invalid Request'});return}
+    resourceManager.delete_account_for_user(dat,accountId,function(error,data){
+      if(error){
+        console.log(error)
+        res.send({'error':'Internal Server Error'});return
+      }
+      res.send({'data':'Deleted'})
+    })
+  })
+})
+
+
+router.get('/jsapi/get_accounts',(req,res) => {
+  authenticationHelper.authenticate(req,function(err,dat) {
+    if(err) {res.send({'error':"Not Authenticated"});return} 
+    resourceManager.get_accounts_for_user(dat,function(error,data){
+      if(error){console.log(error);res.send({'error':'Internal Server Error'});return}
+      res.send({'data':data})
+    })
+  })
+})
+
+
+
+
+
+
 
 //A temperory function to create resource mapping in backend
 router.get('/jsapi/add_resource_relation',(req,res) => {

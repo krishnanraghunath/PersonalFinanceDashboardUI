@@ -15,6 +15,13 @@ var ddb = {
             if(error){callback(error,null);return}
             callback(null,data)
         })
+    },
+
+    update: function(params,callback) {
+        docClient.update(params,function(error,data){
+            if(error){callback(error,null);return}
+            callback(null,data)
+        })
     }
 }
 

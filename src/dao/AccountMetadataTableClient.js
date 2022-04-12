@@ -20,6 +20,7 @@ var AccountMetadataTableClient = {
                 accountType: account_type,
                 accountNumber: account_number,
                 institution: institution_type,
+                status: 'ACTIVE',
                 creationTime: Math.floor(Date.now()/1000),
                 lastModifiedTime: Math.floor(Date.now()/1000)
             },
@@ -40,14 +41,17 @@ var AccountMetadataTableClient = {
     get_accounts_for_user: function(user_id,callback) {
         var params = {
             TableName : 'AccountMetadataTable',
-            IndexName : 'user_id-accountType-index',
-            KeyConditionExpression: "#id = :user_id",
+            IndexName : 'user_id-status-index',
+            KeyConditionExpression: "#id = :user_id and #status = :status",
             ExpressionAttributeValues: {
-                ':user_id' : user_id
+                ':user_id' : user_id,
+                ':status' : 'ACTIVE'  //Only active accounts will be fetched
             },
             ExpressionAttributeNames: {
-                '#id': 'user_id'
-            }
+                '#id': 'user_id',
+                '#status': 'status'
+            },
+            ProjectionExpression:"accountId,accountType,accountName,institution,accountNumber,creationTime,lastModifiedTime"
         }
         ddb.query(params,callback)
     },
@@ -64,7 +68,30 @@ var AccountMetadataTableClient = {
             }
         }
         ddb.query(params,callback)
+    },
+
+    delete_account: function(userId,accountId,callback){
+        var params = {
+            TableName : 'AccountMetadataTable',
+            Key:{
+                'accountId':accountId
+            },
+            UpdateExpression: "set #status = :status,#lastModifiedTime = :lastModifiedTime",
+            ConditionExpression: "#user_id = :user_id",
+            ExpressionAttributeValues: {
+                ':status' : 'DELETED',
+                ':lastModifiedTime':Math.floor(Date.now()/1000),
+                ':user_id' : userId
+            },
+            ExpressionAttributeNames: {
+                '#status': 'status',
+                '#lastModifiedTime':'lastModifiedTime',
+                '#user_id':'user_id'
+            }
+        }
+        ddb.update(params,callback)
     }
+
 }
 
 module.exports = AccountMetadataTableClient

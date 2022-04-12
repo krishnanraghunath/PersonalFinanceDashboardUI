@@ -8,12 +8,11 @@ class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            selected:'accountSettingButton'
+            selected:'PAGE_MY_ACCOUNTS'
         }
         this.updateContent = this.updateContent.bind(this)
     }
     updateContent = (selected) => {
-        console.log(selected)
         this.setState({selected})
     }
 

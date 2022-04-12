@@ -90,19 +90,12 @@ class AccountCreate extends React.Component {
        this.data.form[event.target.id] = event.target.value
     }
 
-    onSubmit(event) {
-        this.setState({
-            alert_accounts:configData.ACCOUNT_MANAGEMENT.ALERTS.ALERT_INFO_ACCOUNT_SELECT,
-            alert_accountnumber:configData.ACCOUNT_MANAGEMENT.ALERTS.ALERT_INFO_ACCOUNTNUMBER_SELECT,
-            alert_accountname:configData.ACCOUNT_MANAGEMENT.ALERTS.ALERT_INFO_ACCOUNTNAME_SELECT,
-            alert_accounts_severity:'info',
-            alert_accountnumber_severity:'info',
-            alert_accountname_severity:'info'
-        })
+
+    validate() {
         if(this.data.form.accountType == '' || this.data.form.institution == '' ) {this.setState({
-                alert_accounts_severity:'error',
-                alert_accounts:configData.ACCOUNT_MANAGEMENT.ALERTS.ALERT_ERROR_ACCOUNT_SELECT})
-            return
+            alert_accounts_severity:'error',
+            alert_accounts:configData.ACCOUNT_MANAGEMENT.ALERTS.ALERT_ERROR_ACCOUNT_SELECT})
+        return
         }
         if(this.data.form.accountNumber == '' || this.data.form.accountNumber2 == '') { this.setState({
                 alert_accountnumber_severity:'error',
@@ -119,26 +112,44 @@ class AccountCreate extends React.Component {
                 alert_accountname:configData.ACCOUNT_MANAGEMENT.ALERTS.ALERT_ERROR_ACCOUNTNAME_SELECT})
             return
         }
-        this.setState({status_loading_submitbutton: true})
-        let createStatus = apiUtil.callAsync('create_account',this.data.form)
+        this.submitForm()
+    }
+
+    submitForm() {
+        this.setState({status_loading_submitbutton: true},
+            () => {
+                let createStatus = apiUtil.callAsync('create_account',this.data.form)
+                //Error keeps coming in check these parts
+                createStatus.then((createStatus) => {
+                    if('error' in createStatus){
+                            this.setState({ status_loading_submitbutton:false,
+                                            alert_submit_error:createStatus.error,
+                                            status_submit_error:true})
+                    }
+                    this.setState({status_loading_submitbutton: false})
+                })
+                .catch(function(error){
+                    this.setState({status_loading_submitbutton: false})
+                })})
+    }
 
 
-        //Error keeps coming in check these parts
-        createStatus.then(function(createStatus){
-            if('error' in createStatus){
-                    this.setState({ status_loading_submitbutton:false,
-                                    alert_submit_error:createStatus.error,
-                                    status_submit_error:true})
-            }
-            this.setState({status_loading_submitbutton: false})
-        })
-        .catch(function(error){this.setState({status_loading_submitbutton: false})})
+    onSubmit(event) {
+        this.setState({
+            alert_accounts:configData.ACCOUNT_MANAGEMENT.ALERTS.ALERT_INFO_ACCOUNT_SELECT,
+            alert_accountnumber:configData.ACCOUNT_MANAGEMENT.ALERTS.ALERT_INFO_ACCOUNTNUMBER_SELECT,
+            alert_accountname:configData.ACCOUNT_MANAGEMENT.ALERTS.ALERT_INFO_ACCOUNTNAME_SELECT,
+            alert_accounts_severity:'info',
+            alert_accountnumber_severity:'info',
+            alert_accountname_severity:'info',
+            status_submit_error: false,
+        },() => {this.validate()})
+            
     }
 
     render() {
-        // return 
     return<div>
-        <Grid container spacing={3}>
+         <Grid container spacing={3}>
                 <Grid item>
                     <Box sx={{margin:1,border:2}}>
                         <Alert severity={this.state.alert_accounts_severity}>{this.state.alert_accounts}</Alert>
@@ -211,17 +222,17 @@ class AccountCreate extends React.Component {
         </Grid>
         <Divider/>
         <Divider/>
-        <Box sx={{margin:1,border:2,width:'20%'}}>
+        <Box sx={{width:'50%'}}>
             {this.state.status_submit_error &&
                 <Alert severity="error">{this.state.alert_submit_error}</Alert>
             }
             <LoadingButton loading={this.state.status_loading_submitbutton}  loadingIndicator="Creating..." 
-variant="contained"  sx={{margin:1,border:2}} onClick={this.onSubmit}>Create Account</LoadingButton>
-        </Box>
-        <Divider/>
-        <Divider/>
+        variant="contained"  sx={{margin:1}} onClick={this.onSubmit}>Create Account</LoadingButton>
+                </Box>
+                <Divider/>
+                <Divider/>
 
-    </div> 
+            </div> 
     }
 }
 

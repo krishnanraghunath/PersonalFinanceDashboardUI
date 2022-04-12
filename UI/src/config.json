@@ -19,8 +19,17 @@
             "create_account" : {
                 "url" : "/jsapi/create_account",
                 "method": "POST",
-                "cache" : false,
-                "cache_ttl": 3600
+                "cache" : false
+            },
+            "get_accounts" : {
+                "url" : "/jsapi/get_accounts",
+                "method": "GET",
+                "cache" : false
+            },
+            "delete_account" : {
+                "url" : "/jsapi/delete_account",
+                "method": "POST",
+                "cache" : false
             }
         }
     },
@@ -35,6 +44,18 @@
             "ALERT_ERROR_ACCOUNTNUMBER_MISMATCH" : "Account Number are not matching",
             "ALERT_ERROR_ACCOUNTNAME_SELECT" : "Account Name Missing"
         }
+    },
+
+
+    "TABLE_COLUMN_DEFENITIONS" : {
+       "ACCOUNT_DETAILS" : [
+            { "field": "accountName", "headerName": "Account Name","flex":1},
+            { "field": "accountNumber", "headerName": "Account Number","flex":1},
+            { "field": "accountType", "headerName": "Instrument Type","flex":1},
+            { "field": "institution", "headerName": "Institution","flex":1},
+            { "field": "creationTime", "headerName": "Creation Time (GMT)","flex":1},
+            { "field": "lastModifiedTime", "headerName": "Last Modified Time (GMT)","flex":1}
+          ]
     }
     
 }

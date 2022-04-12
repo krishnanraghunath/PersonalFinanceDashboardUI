@@ -1,9 +1,5 @@
 import React from "react";
-// import Button from "@awsui/components-react/button";
-import SpaceBetween from "@awsui/components-react/space-between";
 import "./index.css"
-
-
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -12,7 +8,6 @@ import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
@@ -22,7 +17,6 @@ import MenuItem from '@mui/material/MenuItem';
 class NavBar extends React.Component {
     constructor(props) {
         super(props);
-        console.log(props)
         this.menu_items = {
                 pages : [
                     {id:'PAGE_MY_ACCOUNTS',label:'Accounts Management'},
@@ -53,7 +47,6 @@ class NavBar extends React.Component {
         try{
             var selectedId = event.target.id
             if (selectedId == ''){selectedId = event.target.offsetParent.id} 
-            console.log(selectedId)
             this.props.updateContent(selectedId)
         } catch(error) {}
         this.setState({anchorElNav:null,anchorElUser:null})

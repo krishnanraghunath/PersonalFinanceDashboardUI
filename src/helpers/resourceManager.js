@@ -5,6 +5,9 @@ var Resources_RelationsMetadataTableClient = require('../dao/Resources_Relations
 var AccountMetadataTableClient = require('../dao/AccountMetadataTableClient')
 
 var resourceManager = {
+
+
+
     get_available_account_types: function(callback) {
         Resources_RelationsMetadataTableClient.get_resources_for_group(
             'Common',
@@ -23,6 +26,20 @@ var resourceManager = {
         Resources_RelationsMetadataTableClient.create_resources_for_group(group,type,value,callback)
     },
 
+
+    get_accounts_for_user: function(user_id,callback) {
+        AccountMetadataTableClient.get_accounts_for_user(user_id,function(error,data) {
+            if(error){callback(error,null)}
+            let accounts = []
+            data.Items.forEach((item) =>{
+                item.accountNumber = "***"+ item.accountNumber.slice(Math.max(item.accountNumber.length-4,1))
+                item.creationTime = new Date(item.creationTime*1000).toISOString().replace(/T/,' ').replace(/\..+/, '')
+                item.lastModifiedTime = new Date(item.lastModifiedTime*1000).toISOString().replace(/T/,' ').replace(/\..+/, '')
+                accounts.push(item)
+            })
+            callback(null,accounts)
+        })
+    },
 
     create_account_id_resource_for_user: function(user_id,account_info,callback) {
         let accountType = account_info.accountType
@@ -48,6 +65,11 @@ var resourceManager = {
                 })
             })
         })
+    },
+
+
+    delete_account_for_user: function(user_id,account_id,callback) {
+        AccountMetadataTableClient.delete_account(user_id,account_id,callback)
     }
 }
 

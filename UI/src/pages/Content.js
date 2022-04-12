@@ -6,7 +6,7 @@ class Content extends React.Component {
     }
 
     render(){
-        if (this.props.selected == "PAGE_MY_ACCOUNTS") {
+        if (this.props.selected === "PAGE_MY_ACCOUNTS") {
             return <AccountSettings/>
         }else {
             return <div>Test</div>

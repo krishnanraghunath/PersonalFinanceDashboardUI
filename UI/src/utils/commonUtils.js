@@ -10,7 +10,6 @@ class commonUtils {
         }
         return titleCase.join(' ')
     }
-
 }
 
 export default commonUtils
