@@ -1,5 +1,4 @@
 import React from "react";
-import "./index.css"
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -66,7 +65,7 @@ class NavBar extends React.Component {
                Personal Finance Dashboard
             </Typography>
   
-            <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+            <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' }}}>
               <IconButton
                 size="large"
                 aria-label="account of current user"
@@ -97,7 +96,7 @@ class NavBar extends React.Component {
               >
                 {this.menu_items.pages.map((page) => (
                   <MenuItem key={page.label} id={page.id} onClick={this.handleMenuSelect}>
-                    <Typography textAlign="center">{page.label}</Typography>
+                    <Typography variant="h6" textAlign="left">{page.label}</Typography>
                   </MenuItem>
                 ))}
               </Menu>
