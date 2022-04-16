@@ -3,6 +3,8 @@ var constants = require('../constants')
 var md5 = require('md5');
 var Resources_RelationsMetadataTableClient = require('../dao/Resources_RelationsMetadataTableClient')
 var AccountMetadataTableClient = require('../dao/AccountMetadataTableClient')
+var TagMetadataTableClient = require('../dao/TagMetadataTableClient');
+const { default: commonUtils } = require('../../UI/src/utils/commonUtils');
 
 var resourceManager = {
 
@@ -70,6 +72,14 @@ var resourceManager = {
 
     delete_account_for_user: function(user_id,account_id,callback) {
         AccountMetadataTableClient.delete_account(user_id,account_id,callback)
+    },
+
+    add_tag_for_user: function(user_id,tag_info,callback) {
+        let tagName = tag_info.tagName
+        let tagRules = tag_info.tagRules
+        if(tagName == null || tagName == ''){callback('Tag Name is not provided',null);return}
+        if(tagRules == null || typeof(tagRules) != 'object'){callback('Tag Rules is not provided',null);return}
+        TagMetadataTableClient.create_tag(user_id,tagName,tagRules,callback)
     }
 }
 

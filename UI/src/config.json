@@ -30,6 +30,11 @@
                 "url" : "/jsapi/delete_account",
                 "method": "POST",
                 "cache" : false
+            },
+            "create_tag" : {
+                "url" : "/jsapi/create_tag",
+                "method": "POST",
+                "cache" : false
             }
         }
     },
@@ -55,7 +60,13 @@
             { "field": "institution", "headerName": "Institution","flex":1},
             { "field": "creationTime", "headerName": "Creation Time (GMT)","flex":1},
             { "field": "lastModifiedTime", "headerName": "Last Modified Time (GMT)","flex":1}
-          ]
+          ],
+        "TAG_CREATE" : [
+        { "field": "id", "headerName": "Statement ID","flex":1},
+        { "field": "lOperand", "headerName": "Left Operand","flex":1},
+        { "field": "operation", "headerName": "Operation","flex":1},
+        { "field": "rOperand", "headerName": "Right Operand","flex":1}
+        ]
     }
     
 }

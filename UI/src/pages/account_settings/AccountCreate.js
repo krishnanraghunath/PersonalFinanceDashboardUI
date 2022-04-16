@@ -3,10 +3,10 @@ import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Select from '@mui/material/Select';
 import commonUtils from '../../utils/commonUtils'
 import apiUtil from '../../utils/apiUtil'
-import {Typography,TextField,Grid,Button, Alert,Divider} from '@mui/material'
+import {Typography,TextField,Grid, Alert,Divider} from '@mui/material'
 import { LoadingButton } from '@mui/lab';
 import configData from "../../config.json"
 
@@ -29,7 +29,7 @@ class AccountCreate extends React.Component {
                 status_disableInstitutions: false,
                 status_loading_submitbutton: false,
                 status_submit_error: false,
-
+                status_submit_success: false,
 
                 data_accountTypes : [],
                 data_institutions : [],
@@ -126,7 +126,7 @@ class AccountCreate extends React.Component {
                                             alert_submit_error:createStatus.error,
                                             status_submit_error:true})
                     }
-                    this.setState({status_loading_submitbutton: false})
+                    else{this.setState({status_loading_submitbutton: false,status_submit_success:true})}
                 })
                 .catch(function(error){
                     this.setState({status_loading_submitbutton: false})
@@ -143,6 +143,7 @@ class AccountCreate extends React.Component {
             alert_accountnumber_severity:'info',
             alert_accountname_severity:'info',
             status_submit_error: false,
+            status_submit_success:false
         },() => {this.validate()})
             
     }
@@ -225,6 +226,9 @@ class AccountCreate extends React.Component {
         <Box sx={{width:'50%'}}>
             {this.state.status_submit_error &&
                 <Alert severity="error">{this.state.alert_submit_error}</Alert>
+            }
+            {this.state.status_submit_success &&
+                <Alert severity="error">Successfully created the account</Alert>
             }
             <LoadingButton loading={this.state.status_loading_submitbutton}  loadingIndicator="Creating..." 
         variant="contained"  sx={{margin:1}} onClick={this.onSubmit}>Create Account</LoadingButton>

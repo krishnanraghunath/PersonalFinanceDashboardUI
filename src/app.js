@@ -101,14 +101,12 @@ router.post('/jsapi/delete_account',(req,res) => {
     if(accountId == null){res.send({'error':'Invalid Request'});return}
     resourceManager.delete_account_for_user(dat,accountId,function(error,data){
       if(error){
-        console.log(error)
         res.send({'error':'Internal Server Error'});return
       }
       res.send({'data':'Deleted'})
     })
   })
 })
-
 
 router.get('/jsapi/get_accounts',(req,res) => {
   authenticationHelper.authenticate(req,function(err,dat) {
@@ -121,10 +119,17 @@ router.get('/jsapi/get_accounts',(req,res) => {
 })
 
 
-
-
-
-
+router.post('/jsapi/create_tag',(req,res) => {
+  authenticationHelper.authenticate(req,function(err,dat) {
+    if(err) {res.send({'error':"Not Authenticated"});return} 
+    resourceManager.add_tag_for_user(dat,JSON.parse(req.body),function(error,data){
+      console.log(error)
+      console.log(data)
+      if(error){res.send({'error':'Internal Server Error'});return}
+      res.send({'data':'Created'})
+    })
+  })
+})
 
 //A temperory function to create resource mapping in backend
 router.get('/jsapi/add_resource_relation',(req,res) => {

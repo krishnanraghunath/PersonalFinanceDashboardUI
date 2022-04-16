@@ -10,6 +10,14 @@ class commonUtils {
         }
         return titleCase.join(' ')
     }
+
+    static getRandomAlphabetString = (length) => {
+        var text = "";
+        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";    
+        for (var i = 0; i < length; i++)
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+        return text;
+    }
 }
 
 export default commonUtils

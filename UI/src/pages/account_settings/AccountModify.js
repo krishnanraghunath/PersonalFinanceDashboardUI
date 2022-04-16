@@ -43,16 +43,9 @@ class AccountModify extends React.Component {
     }
 
     async componentDidMount() {
-        let accounts = apiUtil.callAsync('get_accounts',{})
-        accounts.then(function(accounts){
-            let accountsList = []
-            if(accounts == undefined || 'error' in accounts){console.log('Error in response.');return accountsList}
-            accounts.data.forEach(account => 
-                {account.id = account.accountId;accountsList.push(account)})
-            return accountsList
-        })
-        .then((items) => {this.setState({data_rows:items})})
-        .catch( function(error){console.log(error)})
+        apiUtil.callAsync('get_accounts',{})
+            .then((items) => {this.setState({data_rows:items.data})})
+            .catch( function(error){console.log(error)})
     }
 
     render() {
@@ -75,6 +68,7 @@ class AccountModify extends React.Component {
                             color: 'primary.main',
                             },
                         }}
+                        getRowId={(row) => row.accountId} 
                     />
                 </Box>
                 </Grid>
@@ -87,7 +81,7 @@ class AccountModify extends React.Component {
                     }
                 </Box>
                 </Grid>
-                </Grid>
+            </Grid>
     }
 }
 
