@@ -1,4 +1,7 @@
-{
+{   
+    "TYPES" : {
+        "TRANSACTION_TYPES" : ["DEBIT","CREDIT"]
+    },
     
     "API_CONFIG" : {
         "API_END_POINT" : "https://aham.personalfinancedashboard.xyz",
@@ -35,6 +38,41 @@
                 "url" : "/jsapi/create_tag",
                 "method": "POST",
                 "cache" : false
+            },
+            "get_user_tags" : {
+                "url" : "/jsapi/get_user_tags",
+                "method": "GET",
+                "cache" : true
+            },
+            "get_tag_info_by_id" : {
+                "url" : "/jsapi/get_tag_info_by_id",
+                "method": "GET",
+                "cache" : true
+            },
+            "get_attached_accounts_for_tag" :{
+                "url" :"/jsapi/get_attached_accounts_for_tag",
+                "method" : "GET",
+                "cache":false
+            },
+            "update_tag" :{
+                "url" :"/pyapi/update_tag",
+                "method" : "POST",
+                "cache":false
+            },
+            "delete_tag" :{
+                "url" :"/jsapi/delete_tag",
+                "method" : "POST",
+                "cache":false
+            },
+            "create_transactions" :{
+                "url" :"/pyapi/create_transactions",
+                "method" : "POST",
+                "cache":false
+            },
+            "upload_transactions" :{
+                "url" :"/jsapi/upload_transactions",
+                "method" : "POST",
+                "cache":false
             }
         }
     },
@@ -66,7 +104,41 @@
         { "field": "lOperand", "headerName": "Left Operand","flex":1},
         { "field": "operation", "headerName": "Operation","flex":1},
         { "field": "rOperand", "headerName": "Right Operand","flex":1}
+        ],
+        "TRANSACTION_ENTRIES" : [
+            { "field": "fromAccountName", "headerName": "From Account","flex":1},
+            { "field": "toAccountName", "headerName": "To Account Number","flex":1},
+            { "field": "txnType", "headerName": "Transaction Type","flex":1},
+            { "field": "txnTimestamp", "headerName": "Transaction Timestamp","flex":1},
+            { "field": "txnDescription", "headerName": "Transaction Description","flex":1},
+            { "field": "externalTxnId", "headerName": "Transaction ID","flex":1},
+            { "field": "txnAmount", "headerName": "Transaction Amount","flex":1}
         ]
+    },
+
+
+    "STATE_CONFIG" : {
+            "TAG_CREATE" : {
+                "INITIAL_STATE" : {"tagActionError":false,"tag_value":{"error":false,"disabled":false},
+                                        "tag_search":{"loading":false,"disabled":true},"tagFoundStatus":0,"tagName":""},
+                "TAG_SEARCHING" : {"tag_value":{"error":false,"disabled":true},"tag_search":{"loading":true}},
+                "TAG_SEARCH_FOUND" : {"tag_search":{"loading":false,"disabled":true},"tagFoundStatus":2,"tagActionError":false,
+                    "deleteButton":{"loading":false,"disabled":false},"updateButton":{"loading":false,"disabled":false}},
+                "TAG_SEARCH_NOT_FOUND" : {"tag_search":{"loading":false,"disabled":true},"tagFoundStatus":1},
+                "TAG_DELETE" : {"deleteButton":{"loading":true,"disabled":false},"updateButton":{"loading":false,"disabled":true}},
+                "TAG_MODIFY" : {"deleteButton":{"loading":false,"disabled":true},"updateButton":{"loading":true,"disabled":false}},
+                "TAG_ACTION_COMPLETE" : {"deleteButton":{"loading":false,"disabled":false},"updateButton":{"loading":false,"disabled":false}},
+                "CREATE_ENTRY" : {"tag_search":{"loading":false}},
+                "MODIFY_ENTRY" : {"tag_search":{"loading":false}}
+            },
+            "TRANSACTION_CREATE" : {
+                "RESET_TX" : {"externalTxnId" : "", "txnType": "DEBIT", "fromAccount": "","toAccount":"EXTERNAL",
+                    "txnDescription":"","modify":false, "fromAccountError":false,
+                        "externalTxnIdError":false,"txnDescriptionError":false,"creating_transactions":false}
+            }
+
+            
+
     }
     
 }

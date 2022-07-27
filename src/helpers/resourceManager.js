@@ -4,7 +4,6 @@ var md5 = require('md5');
 var Resources_RelationsMetadataTableClient = require('../dao/Resources_RelationsMetadataTableClient')
 var AccountMetadataTableClient = require('../dao/AccountMetadataTableClient')
 var TagMetadataTableClient = require('../dao/TagMetadataTableClient');
-const { default: commonUtils } = require('../../UI/src/utils/commonUtils');
 
 var resourceManager = {
 
@@ -13,14 +12,24 @@ var resourceManager = {
     get_available_account_types: function(callback) {
         Resources_RelationsMetadataTableClient.get_resources_for_group(
             'Common',
-            'ACCOUNT_TYPES',callback
+            'ACCOUNT_TYPE',callback
         )
     },
 
     get_available_institutions_for_account_type: function(account_type,callback) {
         Resources_RelationsMetadataTableClient.get_resources_for_group(
             account_type,
-            'INSTITUTIONS',callback
+            'INSTITUTION',callback
+        )
+    },
+
+
+    //TODO: As of now tagName can not be changed --> Seems okay, we can have a display name later
+    get_attached_accounts_for_tag: function(user_id,tagName,callback) {
+        let tagId = md5(user_id + tagName)
+        Resources_RelationsMetadataTableClient.get_resources_for_group(
+            tagId,
+            'ATTACHED_ACCOUNT',callback
         )
     },
 
@@ -31,12 +40,17 @@ var resourceManager = {
 
     get_accounts_for_user: function(user_id,callback) {
         AccountMetadataTableClient.get_accounts_for_user(user_id,function(error,data) {
-            if(error){callback(error,null)}
             let accounts = []
+            if(error){
+                if(error){callback(null,[]);return}
+                else{callback(error,null);return}
+            }
             data.Items.forEach((item) =>{
                 item.accountNumber = "***"+ item.accountNumber.slice(Math.max(item.accountNumber.length-4,1))
-                item.creationTime = new Date(item.creationTime*1000).toISOString().replace(/T/,' ').replace(/\..+/, '')
-                item.lastModifiedTime = new Date(item.lastModifiedTime*1000).toISOString().replace(/T/,' ').replace(/\..+/, '')
+                //19800 -> 5.5 Hours --> Second (GMT -> IST). As of now doing it at server end.
+                //TODO: The time stamp to string can be done at client end later.
+                item.creationTime = new Date((item.creationTime+19800)*1000).toISOString().replace(/T/,' ').replace(/\..+/, '')
+                item.lastModifiedTime = new Date((item.lastModifiedTime+19800)*1000).toISOString().replace(/T/,' ').replace(/\..+/, '')
                 accounts.push(item)
             })
             callback(null,accounts)
@@ -77,10 +91,57 @@ var resourceManager = {
     add_tag_for_user: function(user_id,tag_info,callback) {
         let tagName = tag_info.tagName
         let tagRules = tag_info.tagRules
+        let modify = tag_info.modify
         if(tagName == null || tagName == ''){callback('Tag Name is not provided',null);return}
         if(tagRules == null || typeof(tagRules) != 'object'){callback('Tag Rules is not provided',null);return}
-        TagMetadataTableClient.create_tag(user_id,tagName,tagRules,callback)
-    }
+        if(modify) TagMetadataTableClient.modify_tag(user_id,tagName,tagRules,callback)
+        else TagMetadataTableClient.create_tag(user_id,tagName,tagRules,callback)
+    },
+
+    delete_tag_for_user: function(user_id,tag_info,callback) {
+        let tagName = tag_info.tagName
+        let tagId = md5(user_id+tagName)
+        TagMetadataTableClient.delete_tag(tagId,callback)
+    },
+
+
+    
+
+    get_tags_for_user: function(user_id,callback){
+        TagMetadataTableClient.get_tags_for_user(user_id,function(error,data){
+            if(error){
+                if(error == 'No Items'){callback(null,[]);return}
+                else{callback(error,null);return}
+            }
+            callback(null,data.Items)
+        })
+    },
+
+    //TODO: Here we may have to change the tagName in future. So we should start considering passing tagId instead of tagName
+    //And then verify if the tagId belongs to the user
+    get_tag_by_tag_name: function(user_id,tagName,callback){
+        let tagId = md5(user_id+tagName)
+        TagMetadataTableClient.get_tag_by_tagId(tagId,function(error,data){
+            if(error){callback(error,null);return}
+            else{callback(null,data.Items[0])}
+        }) 
+    },
+
+
+    // //TODO: We need to check if passed accountIds belong to customer only 
+    // set_attached_accounts_for_tag: function(user_id,tagName,accountIds,callback) {
+    //     let tagId = md5(user_id + tagName)
+    //     let accounts = ""
+    //     Resources_RelationsMetadataTableClient.get_resources_for_group(
+    //         user_id,
+    //         'ACCOUNTS',function(error,userAccounts){
+    //             if(error){callback(error,null);return}
+    //             accountIds.forEach(accountId =>{
+
+    //             })
+    //         }
+    //     )
+    // },
 }
 
 module.exports = resourceManager

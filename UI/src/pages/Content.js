@@ -1,6 +1,7 @@
 import React from "react";
 import AccountSettings from "./account_settings/AccountSettings";
 import TagSettings from "./tag_settings/TagSettings"
+import TransactionsSettings from "./transactions_settings/TransactionsSettings"
 class Content extends React.Component {
     constructor(props) {
         super(props)
@@ -9,8 +10,12 @@ class Content extends React.Component {
     render(){
         if (this.props.selected === "PAGE_MY_ACCOUNTS") {
             return <AccountSettings/>
-        }else {
+        }
+        if (this.props.selected === "PAGE_MY_TAGS") { 
             return <TagSettings/>
+        }
+        if (this.props.selected === "PAGE_ACCOUNT_TRANSACTIONS") { 
+            return <TransactionsSettings/>
         }
     }
 }

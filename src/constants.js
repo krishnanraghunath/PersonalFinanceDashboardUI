@@ -20,5 +20,10 @@ module.exports = Object.freeze({
     //TODO: Need to setup private apis
     BACKEND_API_URL : process.env.BACKEND_API_URL,
 
+    //MIME Types supported for file upload
+    FILE_UPLOAD_BUCKET_NAME : 'transactionfilesuploads',
+    SUPPORTED_MIME_TYPES: ["application/pdf","text/csv","text/plain"]
+
+
 
 });

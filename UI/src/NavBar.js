@@ -19,7 +19,8 @@ class NavBar extends React.Component {
         this.menu_items = {
                 pages : [
                     {id:'PAGE_MY_ACCOUNTS',label:'Accounts Management'},
-                    {id:'PAGE_MY_TAGS',label:'Tags Management'}
+                    {id:'PAGE_MY_TAGS',label:'Tags Management'},
+                    {id: 'PAGE_ACCOUNT_TRANSACTIONS',label:"Transactions Management"}
                 ],
                 settings: [
                     {id: 'PROFILE_SIGNOUT',label:'Signout'}

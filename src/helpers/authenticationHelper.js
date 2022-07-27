@@ -20,6 +20,7 @@ var authenticationHelper = {
     },
 
     authenticate: function(request,callback) {
+        // callback(null,'48ddf8a2-6124-4c6a-9078-65aa54bc9a1a')
         var sessionId = request.cookies._SESSION
         if (sessionId == null) {callback('Not Authenticated',null);return}
         sessionTableClient.get_session(sessionId,function(error,data){

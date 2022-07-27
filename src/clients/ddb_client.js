@@ -1,6 +1,6 @@
-var AWS = require('aws-sdk')
-var constants = require('../constants')
-var docClient = new AWS.DynamoDB.DocumentClient();
+const AWS = require('aws-sdk')
+AWS.config.update({region: 'ap-south-1'}); // For local testing
+const docClient = new AWS.DynamoDB.DocumentClient();
 var ddb = {
     query: function(params,callback){
         docClient.query(params,function(error,data){

@@ -22,11 +22,13 @@ var apiHelper = {
         }
         */
         let apiUrls = req.url.split('?')[0].split('/') //Removing the ?* at the end of path 
+        let params = {}
+        if(req.method == 'GET'){params = req.query}
+        if(req.method == 'POST'){params = JSON.parse(req.body)}
         let lambdaEvent = {
             user_id: req.user_id, //user_id to be set on request 
             api: apiUrls[apiUrls.length-1],
-            query: req.query,
-            body: req.body
+            params:params
          }
         console.log("Invoking backend lambda with payload =>" + JSON.stringify(lambdaEvent))
         lambda.invoke({
@@ -34,7 +36,7 @@ var apiHelper = {
             Payload:JSON.stringify(lambdaEvent),
         },function(error,data){
             if(error){callback(error,null);return}
-            if('error' in data){callback(data['error'],null);return}
+            data = JSON.parse(data['Payload'])
             callback(null,data)
         })
     }

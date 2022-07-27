@@ -3,11 +3,11 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider'
-import TagCreate from "./TagCreate"
-import TagModify from "./TagModify"
+import TransactionCreate from './TransactionCreate'
+import TransactionsUpload from './TransactionsUpload'
 
 
-class TagSettings extends React.Component {
+class TransactionsSettings extends React.Component {
     constructor(props) {
         super(props);
         this.state = {selectedTab:'create'};
@@ -22,21 +22,24 @@ class TagSettings extends React.Component {
     }
 
     render() {
-      return<div> <Box sx={{borderBottom: 5 ,borderColor: 'green',borderColortop: 'green',border: 1 ,margin: 1}}>
+
+      return<div> 
+      <Box sx={{borderBottom: 5 ,borderColor: 'green',borderColortop: 'green',border: 1 ,margin: 1}} >
+
         <Tabs  value={this.state.selectedTab} onChange={this.handleChange}>
-          <Tab label="Create New Tag" value="create" id="create"/>
-          <Tab label="Attach Account" value="modify" id="modify"/>
+          <Tab label="Record Transaction" value="create" id="create"/>
+          <Tab label="Upload Transactions" value="upload" id="upload"/>
         </Tabs>
       </Box>
       <Box  sx={{border: 1,margin: 4,backgroundColor:'green',minWidth:390}}>
       <Box  sx={{border: 1,margin: 0.3,backgroundColor:'white'}}>
        <Divider/>
-        {this.state.selectedTab == "create" && <TagCreate/> }
-        {this.state.selectedTab == "modify" && <TagModify/>}
+        {this.state.selectedTab == "create" && <TransactionCreate/> }
+        {this.state.selectedTab == "upload" && <TransactionsUpload/>}
         </Box>
         </Box>
       </div>
     }
 }
 
-export default TagSettings;
+export default TransactionsSettings;

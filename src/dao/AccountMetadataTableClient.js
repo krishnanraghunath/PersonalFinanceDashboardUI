@@ -1,4 +1,3 @@
-const constants = require("../constants");
 ddb = require('../clients/ddb_client')
 var md5 = require('md5');
 

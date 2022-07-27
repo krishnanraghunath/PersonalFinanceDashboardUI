@@ -1,9 +1,8 @@
-const constants = require("../constants");
 var md5 = require('md5');
 ddb = require('../clients/ddb_client')
 var Resources_RelationsMetadataTableClient = {
     /*
-    Fet a resource
+    Fetch a resource
      */
     get_resources_for_group: function(resource_group,resource_type,callback) {
         var params = {
@@ -16,7 +15,10 @@ var Resources_RelationsMetadataTableClient = {
             } 
         }
         ddb.query(params,function(error,data){
-            if(error){callback(error,null);return}
+            if(error){
+                if(error){callback(null,[]);return}
+                else{callback(error,null);return}
+            }
             callback(null,data.Items.map(item => item.ResourceValue))
         })
     },

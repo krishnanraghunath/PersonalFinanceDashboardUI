@@ -8,6 +8,10 @@ const constants = require("./constants");
 const authenticationHelper = require("./helpers/authenticationHelper")
 const apiHelper = require("./helpers/apiService")
 const resourceManager = require('./helpers/resourceManager')
+const storageService = require('./helpers/storageService')
+const multer = require('multer')
+const { callbackify } = require('util')
+
 
 const app = express()
 const router = express.Router()
@@ -48,7 +52,7 @@ router.get('/login', (req, res) => {
   })
 })
 
-router.get('/api/*',(req,res) =>{
+router.get('/pyapi/*',(req,res) =>{
   authenticationHelper.authenticate(req,function(error,data) {
     if(error){res.redirect('/');return}
     req.user_id = data
@@ -58,6 +62,19 @@ router.get('/api/*',(req,res) =>{
     })
   })
 })
+
+
+router.post('/pyapi/*',(req,res) =>{
+  authenticationHelper.authenticate(req,function(error,data) {
+    if(error){res.redirect('/');return}
+    req.user_id = data
+    apiHelper.call_api(req,function(error,data){
+      if(error){res.sendStatus(500);return}
+      res.send(data)
+    })
+  })
+})
+
 
 router.get('/jsapi/get_available_account_types',(req,res) => {
   authenticationHelper.authenticate(req,function(err,dat) {
@@ -87,7 +104,8 @@ router.post('/jsapi/create_account',(req,res) => {
     resourceManager.create_account_id_resource_for_user(dat,JSON.parse(req.body),function(error,data){
       if(error){
         if (error == 'ConditionalCheckFailedException') {res.send({'error':'Account already exists'});return}
-        res.send({'error':'Internal Server Error'});return
+        res.send({'error':'Internal Server Error'})
+        return
       }
       res.send({'data':'Created'})
     })
@@ -123,13 +141,66 @@ router.post('/jsapi/create_tag',(req,res) => {
   authenticationHelper.authenticate(req,function(err,dat) {
     if(err) {res.send({'error':"Not Authenticated"});return} 
     resourceManager.add_tag_for_user(dat,JSON.parse(req.body),function(error,data){
-      console.log(error)
-      console.log(data)
       if(error){res.send({'error':'Internal Server Error'});return}
       res.send({'data':'Created'})
     })
   })
 })
+
+
+router.post('/jsapi/delete_tag',(req,res) => {
+  authenticationHelper.authenticate(req,function(err,dat) {
+    if(err) {res.send({'error':"Not Authenticated"});return} 
+    resourceManager.delete_tag_for_user(dat,JSON.parse(req.body),function(error,data){
+      if(error){res.send({'error':'Internal Server Error'});return}
+      res.send({'data':'Removed'})
+    })
+  })
+})
+
+router.get('/jsapi/get_user_tags',(req,res) => {
+  authenticationHelper.authenticate(req,function(err,dat) {
+    if(err) {res.send({'error':"Not Authenticated"});return} 
+    resourceManager.get_tags_for_user(dat,function(error,data){
+      if(error){res.send({'error':'Internal Server Error'});return}
+      res.send({'data':data})
+    })
+  })
+})
+
+router.get('/jsapi/get_tag_info_by_id',(req,res) => {
+  authenticationHelper.authenticate(req,function(err,dat) {
+    if(err) {res.send({'error':"Not Authenticated"});return} 
+    let tagName = req.query.tagName
+    resourceManager.get_tag_by_tag_name(dat,tagName,function(error,data){
+      console.log(error)
+      console.log(data)
+      if(error){res.send({'error':'Internal Server Error'});return}
+      res.send({'data':data})
+    })
+  })
+})
+
+
+
+
+
+router.get('/jsapi/get_attached_accounts_for_tag',(req,res) => {
+  authenticationHelper.authenticate(req,function(err,dat) {
+    if(err) {res.send({'error':"Not Authenticated"});return} 
+    let tagName =  req.query.tagName
+    resourceManager.get_attached_accounts_for_tag(dat,tagName,function(error,data){
+      if(error){console.log(error);res.send({'error':'Internal Server Error'});return}
+      res.send({'data':data})
+    })
+  })
+})
+
+
+
+
+
+
 
 //A temperory function to create resource mapping in backend
 router.get('/jsapi/add_resource_relation',(req,res) => {
@@ -142,6 +213,18 @@ router.get('/jsapi/add_resource_relation',(req,res) => {
         if(error){res.send(400);return}
         res.sendStatus(200)
       })
+  })
+})
+
+
+router.post('/jsapi/upload_transactions',storageService.localUpload.single('transactionsFile'),(req,res) => {
+  authenticationHelper.authenticate(req,function(err,dat) {
+    if(err) {res.send({'error':"Not Authenticated"});return} 
+    storageService.s3Upload(dat,req,function(error,data){
+       console.log(error)
+       if(error){res.send({'error':'Internal Server Error'});return}
+       res.send({'data':{}})
+    })
   })
 })
 
