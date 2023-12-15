@@ -102,3 +102,12 @@ dist
 
 # TernJS port file
 .tern-port
+
+
+#Otherfiles
+
+src/public
+.DS_Store
+.idea
+./sam-template.yaml
+template.packaged.yaml
